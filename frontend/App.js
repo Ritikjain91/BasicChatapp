@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, SafeAreaView, StatusBar, Platform } from 'react-native';
+import { StyleSheet, View, StatusBar, Platform } from 'react-native';
 import { colors } from './src/theme/colors';
 import { LoginScreen } from './src/screens/LoginScreen';
 import { ChatScreen } from './src/screens/ChatScreen';
@@ -21,10 +21,11 @@ export default function App() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar
         barStyle="light-content"
-        backgroundColor={colors.background}
+        backgroundColor={colors.surface}
+        translucent={false}
       />
       <View style={styles.appWrapper}>
         {!currentUser ? (
@@ -37,7 +38,7 @@ export default function App() {
           />
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
