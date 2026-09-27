@@ -1,0 +1,17 @@
+{
+  "name": "chatapp-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && npm run dev",
+    "backend:start": "cd backend && npm start",
+    "frontend": "cd frontend && npm start",
+    "frontend:web": "cd frontend && npm run web",
+    "frontend:android": "cd frontend && npm run android"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

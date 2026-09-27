@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "PulseChat",
+    "slug": "pulse-chat",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#0B0F19"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.pulsechat.app"
+    },
+    "android": {
+      "package": "com.pulsechat.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#0B0F19"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    }
+  }
+}
