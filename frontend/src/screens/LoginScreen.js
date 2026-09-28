@@ -185,7 +185,7 @@ export const LoginScreen = ({ onLoginSuccess }) => {
                 onChangeText={setServerUrl}
                 autoCapitalize="none"
                 autoCorrect={false}
-                placeholder="http://localhost:5000"
+                placeholder="https://basicchatapp-smik.onrender.com"
                 placeholderTextColor={colors.textMuted}
               />
               <View style={styles.presetRow}>
@@ -214,7 +214,7 @@ export const LoginScreen = ({ onLoginSuccess }) => {
                 ))}
               </View>
               <Text style={styles.settingsHint}>
-                Phone testing: Connect your phone to the same Wi-Fi and select "Wi-Fi / Phone", or enter your PC's IP.
+                Connected by default to live cloud on Render. Tap chips above to switch servers anytime.
               </Text>
             </View>
           )}
