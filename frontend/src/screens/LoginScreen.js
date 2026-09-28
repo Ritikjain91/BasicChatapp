@@ -9,10 +9,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  StatusBar,
 } from 'react-native';
 import { colors } from '../theme/colors';
 import { UserAvatar } from '../components/UserAvatar';
-import { DEFAULT_SERVER_URL } from '../config/constants';
+import { DEFAULT_SERVER_URL, SERVER_PRESETS } from '../config/constants';
 import { ChatApi } from '../api/chatApi';
 
 const SUGGESTED_USERS = [
@@ -54,8 +55,9 @@ export const LoginScreen = ({ onLoginSuccess }) => {
       });
     } catch (err) {
       console.error('Login error:', err);
+      setShowSettings(true);
       setError(
-        err.message || 'Unable to connect to the backend server. Please verify the server URL.'
+        `Unable to reach backend at ${serverUrl}. If you are on an Android phone, make sure your phone and PC share the same Wi-Fi and select the Wi-Fi IP below.`
       );
     } finally {
       setLoading(false);
@@ -64,7 +66,8 @@ export const LoginScreen = ({ onLoginSuccess }) => {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : (StatusBar.currentHeight ?? 0)}
       style={styles.keyboardContainer}
     >
       <ScrollView
@@ -185,8 +188,33 @@ export const LoginScreen = ({ onLoginSuccess }) => {
                 placeholder="http://localhost:5000"
                 placeholderTextColor={colors.textMuted}
               />
+              <View style={styles.presetRow}>
+                {SERVER_PRESETS.map((p) => (
+                  <TouchableOpacity
+                    key={p.id}
+                    style={[
+                      styles.presetChip,
+                      serverUrl === p.url && styles.presetChipActive,
+                    ]}
+                    onPress={() => {
+                      setServerUrl(p.url);
+                      setError('');
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <Text
+                      style={[
+                        styles.presetChipText,
+                        serverUrl === p.url && styles.presetChipTextActive,
+                      ]}
+                    >
+                      {p.label}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
               <Text style={styles.settingsHint}>
-                Note: Use your LAN IP (e.g., http://192.168.x.x:5000) when testing on a physical phone via Expo Go.
+                Phone testing: Connect your phone to the same Wi-Fi and select "Wi-Fi / Phone", or enter your PC's IP.
               </Text>
             </View>
           )}
@@ -387,5 +415,33 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     marginTop: 6,
     lineHeight: 14,
+  },
+  presetRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginTop: 8,
+    marginBottom: 4,
+  },
+  presetChip: {
+    backgroundColor: colors.surface,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  presetChipActive: {
+    backgroundColor: colors.primaryGlow,
+    borderColor: colors.primary,
+  },
+  presetChipText: {
+    fontSize: 11,
+    color: colors.textSecondary,
+    fontWeight: '500',
+  },
+  presetChipTextActive: {
+    color: colors.primaryLight,
+    fontWeight: '700',
   },
 });

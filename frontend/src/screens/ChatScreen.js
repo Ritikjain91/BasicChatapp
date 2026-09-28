@@ -8,6 +8,8 @@ import {
   Platform,
   Text,
   TouchableOpacity,
+  Keyboard,
+  StatusBar,
 } from 'react-native';
 import { colors } from '../theme/colors';
 import { ChatHeader } from '../components/ChatHeader';
@@ -31,6 +33,22 @@ export const ChatScreen = ({ currentUser, serverUrl, onLogout }) => {
   const [errorBanner, setErrorBanner] = useState('');
 
   const flatListRef = useRef(null);
+
+  /**
+   * Auto scroll to end when keyboard opens (like WhatsApp)
+   */
+  useEffect(() => {
+    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const sub = Keyboard.addListener(showEvent, () => {
+      setTimeout(() => {
+        flatListRef.current?.scrollToEnd({ animated: true });
+      }, 100);
+    });
+
+    return () => {
+      sub.remove();
+    };
+  }, []);
 
   /**
    * Load previous message history from SQLite via REST API
@@ -246,8 +264,8 @@ export const ChatScreen = ({ currentUser, serverUrl, onLogout }) => {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : (StatusBar.currentHeight ?? 0)}
     >
       {/* Top Header */}
       <ChatHeader
@@ -284,6 +302,8 @@ export const ChatScreen = ({ currentUser, serverUrl, onLogout }) => {
             keyExtractor={(item) => String(item.id || item.timestamp)}
             renderItem={renderItem}
             contentContainerStyle={styles.messagesList}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
             onContentSizeChange={() => {
               flatListRef.current?.scrollToEnd({ animated: true });
             }}
@@ -304,6 +324,11 @@ export const ChatScreen = ({ currentUser, serverUrl, onLogout }) => {
         onSendMessage={handleSendMessage}
         onTypingStart={handleTypingStart}
         onTypingStop={handleTypingStop}
+        onFocus={() => {
+          setTimeout(() => {
+            flatListRef.current?.scrollToEnd({ animated: true });
+          }, 150);
+        }}
       />
 
       {/* Online Users Modal */}

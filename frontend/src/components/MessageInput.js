@@ -11,7 +11,13 @@ import { colors } from '../theme/colors';
 
 const QUICK_EMOJIS = ['👋', '🔥', '🚀', '❤️', '👍', '🎉', '😊'];
 
-export const MessageInput = ({ onSendMessage, onTypingStart, onTypingStop, disabled = false }) => {
+export const MessageInput = ({
+  onSendMessage,
+  onTypingStart,
+  onTypingStop,
+  onFocus,
+  disabled = false,
+}) => {
   const [text, setText] = useState('');
   const typingTimeoutRef = useRef(null);
 
@@ -86,6 +92,7 @@ export const MessageInput = ({ onSendMessage, onTypingStart, onTypingStop, disab
           value={text}
           onChangeText={handleTextChange}
           onKeyPress={handleKeyPress}
+          onFocus={onFocus}
           multiline
           maxLength={1000}
           editable={!disabled}
